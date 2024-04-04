@@ -9,7 +9,7 @@ pipeline {
       stage('checkout') {
            steps {
              
-                git branch: 'master', url: 'https://github.com/kkprbr/jenkins-docker.git'
+                git branch: 'master', url: 'https://github.com/BhargavHarshithMudragiri/jenkins-docker.git'
              
           }
         }
@@ -23,15 +23,15 @@ stage('Docker Build and Tag') {
            steps {
               
                 sh 'docker build -t samplewebapp:latest .' 
-                sh 'docker tag samplewebapp 9963565745/samplewebapp:latest'            
+                sh 'docker tag samplewebapp bhargavharshith/samplewebapp:latest'          
           }
         }
      
   stage('Run Docker container on remote hosts') {
              
             steps {
-                sh "docker -H ssh://jenkins@10.138.0.4 run -d -p 8080:8080 9963565745/samplewebapp:latest"
- 
+                withDockerRegistry([ credentialsId: "dockerHubcredentials", url: "" ]) {
+          sh  'docker push bhargavharshith/samplewebapp:latest'
             }
         }
     }
